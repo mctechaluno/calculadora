@@ -15,6 +15,18 @@ class ViewController: UIViewController {
     var valorB: Double?
     var operadorSet: String?
     var jaCalculou: Bool = false
+    var usuarioEstaDigitando = false
+    let brain : Calculadora = Calculadora()
+    
+    var valorDisplay: Double{
+        get{
+            return Double(valorLabel.text!)!
+        }
+        set{
+            valorLabel.text = String(newValue)
+        }
+    }
+    
     
     //MARK: ciclo de vida da ui
     override func viewDidLoad() {
@@ -27,89 +39,60 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    var usuarioEstaDigitando = false
+    @IBAction func limparAction(_ sender: UIButton) {
+        valorLabel.text?.removeAll()
+        usuarioEstaDigitando = false
+        brain.valorA = nil
+        brain.valorB = nil
+        jaCalculou = false
+    }
+    
+    @IBAction func igualAction(_ sender: UIButton) {
+        
+        self.brain.valorB = valorDisplay
+        
+        switch brain.operador! {
+        case "➕":
+            valorDisplay = brain.somar()
+        case "✖️":
+            valorDisplay = brain.multiplicar()
+        case "➖":
+            valorDisplay = brain.subtrair()
+        case "➗":
+            valorDisplay = brain.dividir()
+            case "√":
+            valorDisplay = brain.raiz()
+        case "°":
+            valorDisplay = brain.potencia()
+        default:
+            break
+        }
+        
+        jaCalculou = true
+    }
     
     @IBAction func operadorAction(_ sender: UIButton) {
+        
         let operador = sender.currentTitle!
-        let resposta: Double?
         
-        if (valorA == nil){
-            valorA = Double(valorLabel.text!)
-        }
-        else{
-            valorB = Double(valorLabel.text!)
+        if (brain.valorA == nil){
+            brain.valorA = valorDisplay
         }
         
-        if (operador == "C"){
-            valorLabel.text?.removeAll()
-            usuarioEstaDigitando = false
-            valorA = nil
-            valorB = nil
-            jaCalculou = false
-        }else if(operador == "➗"){
-            operadorSet = "➗"
-            valorLabel.text?.removeAll()
-            usuarioEstaDigitando = false
-        }
-        else if(operador == "➕"){
-            operadorSet = "➕"
-            valorLabel.text?.removeAll()
-            usuarioEstaDigitando = false
-        }
-        else if(operador == "➖"){
-            operadorSet = "➖"
-            valorLabel.text?.removeAll()
-            usuarioEstaDigitando = false
-        }
-        else if(operador == "✖️"){
-            operadorSet = "✖️"
-            valorLabel.text?.removeAll()
-            usuarioEstaDigitando = false
-        }
-        else if(operador == "π"){
-            valorLabel.text = String(Double.pi)
-        }
-        else if (operador == "="){
-            if (jaCalculou == false){
-                if (operadorSet != nil){
-                    switch operadorSet! {
-                    case "➕":
-                        if (valorA != nil && valorB != nil){
-                            resposta = valorA! + valorB!
-                            valorLabel.text = String(resposta!)
-                        }
-                    case "✖️":
-                        if (valorA != nil && valorB != nil){
-                            resposta = valorA! * valorB!
-                            valorLabel.text = String(resposta!)
-                        }
-                    case "➖":
-                        if (valorA != nil && valorB != nil){
-                            resposta = valorA! - valorB!
-                            valorLabel.text = String(resposta!)
-                        }
-                    case "➗":
-                        if (valorA != nil && valorB != nil){
-                            if (valorB! > 0){
-                                resposta = valorA! / valorB!
-                                valorLabel.text = String(resposta!)
-                            }
-                            else
-                            {
-                                valorLabel.text = "Error"
-                            }
-                        }
-                    default:
-                        valorLabel.text = "Error"
-                    }
-                    
-                    jaCalculou = true
-                }
-            }
+        brain.operador = operador
+        usuarioEstaDigitando = false
+        
+        switch operador {
+        case "√":
+            valorDisplay = brain.raiz()
+        case "±":
+            valorDisplay = valorDisplay * -1
+            brain.valorA = valorDisplay
+        default:
+            break
         }
     }
     
-    // MARK: Action do projeto
     @IBAction func touchInside(_ sender: UIButton) {
         if (jaCalculou == false){
             let digito = sender.currentTitle!
