@@ -42,6 +42,9 @@ class Calculadora: NSObject {
     }
     
     
+    /// Metodo para dividir
+    ///
+    /// - Returns: Returna a divisao
     func dividir() -> Double{
         if (self.valorA != nil && self.valorB != nil && self.valorB! != 0){
             return self.valorA! / self.valorB!
