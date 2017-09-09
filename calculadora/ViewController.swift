@@ -11,9 +11,6 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var valorLabel: UILabel!
     
-    var valorA: Double?
-    var valorB: Double?
-    var operadorSet: String?
     var jaCalculou: Bool = false
     var usuarioEstaDigitando = false
     let brain : Calculadora = Calculadora()
